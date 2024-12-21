@@ -13,7 +13,7 @@ const HomePage = () => {
                 {/* Navigation */}
                 <nav className="py-4">
                     <div className="flex justify-between items-center">
-                        <div className="text-2xl font-bold text-primary-800">EventFinder</div>
+                        <div className="text-2xl font-bold text-primary-800">CampusConnect</div>
                         <div className="flex items-center space-x-4">
                             <span className="text-primary-600">{user?.email}</span>
                             <button
@@ -29,7 +29,7 @@ const HomePage = () => {
                 {/* Hero Section */}
                 <div className="text-center py-20">
                     <h1 className="text-5xl font-extrabold text-primary-900 mb-6">
-                        Welcome to EventFinder
+                        Welcome to CampusConnect!
                     </h1>
                     <p className="text-xl text-primary-600 mb-12 max-w-2xl mx-auto">
                         Your one-stop platform for managing events and helping the community with lost & found items.
