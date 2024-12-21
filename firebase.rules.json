@@ -13,6 +13,10 @@
     "lostItems": {
       ".read": "auth != null",
       ".write": "auth != null"
-    }
+    }, 
+    "lostFoundItems": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+  }
   }
 }
