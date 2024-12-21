@@ -12,50 +12,87 @@ import Register from './components/auth/Register';
 import LostFoundPage from './layouts/LostFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
+
+// function App() {
+//   return (
+//       <Router>
+//         <AuthProvider>
+//           <Toaster position="top-right" />
+//           <Routes>
+//             <Route path="/login" element={<Login />} />
+//             <Route path="/register" element={<Register />} />
+//             <Route path="/" element={
+//               <ProtectedRoute>
+//                 <HomePage />
+//               </ProtectedRoute>
+//             } />
+//             <Route path="/events" element={
+//               <ProtectedRoute>
+//                 <EventPage />
+//               </ProtectedRoute>
+//             } />
+//             <Route path="/lost-found" element={
+//               <ProtectedRoute>
+//                 <LostFoundPage />
+//               </ProtectedRoute>
+//             } />
+//           </Routes>
+//
+//         </AuthProvider>
+//       </Router>
+//   );
+// }
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// src/App.js
+import { ThemeProvider } from './contexts/ThemeContext';
+
 function App() {
   return (
-      <Router>
-        <AuthProvider>
-          <Toaster position="top-right" />
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/events" element={
-              <ProtectedRoute>
-                <EventPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/lost-found" element={
-              <ProtectedRoute>
-                <LostFoundPage />
-              </ProtectedRoute>
-            } />
-          </Routes>
-
-        </AuthProvider>
-      </Router>
+      <ThemeProvider>
+        <Router>
+          <AuthProvider>
+            <Toaster position="top-right" />
+            <Routes>
+              {/* Your existing routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <HomePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/events" element={
+                <ProtectedRoute>
+                  <EventPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/lost-found" element={
+                <ProtectedRoute>
+                  <LostFoundPage />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </AuthProvider>
+        </Router>
+      </ThemeProvider>
   );
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,11 +1,11 @@
-// // src/layouts/EventPage.js
+// // src/layouts/LostFoundPage.js
 // import React from 'react';
-// import { EventProvider } from '../components/events/EventContext';
-// import EventList from '../components/events/EventList';
+// import { LostFoundProvider } from '../components/lostfound/LostFoundContext';
+// import ItemList from '../components/lostfound/ItemList';
 // import { useAuth } from '../components/auth/AuthContext';
 // import { Navigate } from 'react-router-dom';
 //
-// const EventPage = () => {
+// const LostFoundPage = () => {
 //     const { user, loading } = useAuth();
 //
 //     if (loading) {
@@ -21,19 +21,19 @@
 //     }
 //
 //     return (
-//         <EventProvider>
+//         <LostFoundProvider>
 //             <div className="min-h-screen bg-gray-50">
 //                 <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
 //                     <div className="px-4 py-6 sm:px-0">
-//                         <EventList />
+//                         <ItemList />
 //                     </div>
 //                 </div>
 //             </div>
-//         </EventProvider>
+//         </LostFoundProvider>
 //     );
 // };
 //
-// export default EventPage;
+// export default LostFoundPage;
 
 
 
@@ -50,40 +50,16 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// src/layouts/EventPage.js
+// src/layouts/LostFoundPage.js
 import React from 'react';
-import { EventProvider } from '../components/events/EventContext';
-import EventList from '../components/events/EventList';
+import { LostFoundProvider } from '../components/lostfound/LostFoundContext';
+import ItemList from '../components/lostfound/ItemList';
 import { useAuth } from '../components/auth/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { Navigate } from 'react-router-dom';
 import DarkModeToggle from '../components/DarkModeToggle';
 
-const EventPage = () => {
+const LostFoundPage = () => {
     const { user, loading } = useAuth();
     const { isDarkMode } = useTheme();
 
@@ -100,7 +76,7 @@ const EventPage = () => {
     }
 
     return (
-        <EventProvider>
+        <LostFoundProvider>
             <div style={{
                 minHeight: '100vh',
                 background: isDarkMode ? '#1a202c' : '#f3f4f6',
@@ -118,7 +94,7 @@ const EventPage = () => {
                             fontWeight: 'bold',
                             color: isDarkMode ? '#e2e8f0' : '#4b2d8e'
                         }}>
-                            Events
+                            Lost & Found
                         </h1>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                             <span style={{ color: isDarkMode ? '#e2e8f0' : '#5c5c5c' }}>
@@ -133,12 +109,12 @@ const EventPage = () => {
                         borderRadius: '8px',
                         boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)'
                     }}>
-                        <EventList />
+                        <ItemList />
                     </div>
                 </div>
             </div>
-        </EventProvider>
+        </LostFoundProvider>
     );
 };
 
-export default EventPage;
+export default LostFoundPage;

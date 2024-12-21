@@ -80,29 +80,41 @@
 
 
 
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../components/auth/AuthContext';
 import { auth } from '../utils/firebase';
+import DarkModeToggle from '../components/DarkModeToggle';
+import { useTheme } from '../contexts/ThemeContext';
 import Switch from "../utils/Switch"; // Import the CSS for the Switch
 
 const HomePage = () => {
     const { user } = useAuth();
+    const { isDarkMode } = useTheme();
 
     // State for managing dark mode
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    // const [isDarkMode, setIsDarkMode] = useState(false);
 
     // Use useEffect to load the dark mode state from localStorage (if exists)
-    useEffect(() => {
-        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-        setIsDarkMode(savedDarkMode);
-    }, []);
+    // useEffect(() => {
+    //     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    //     setIsDarkMode(savedDarkMode);
+    // }, []);
 
     // Toggle dark mode and save preference in localStorage
-    const handleToggle = () => {
-        setIsDarkMode(!isDarkMode);
-        localStorage.setItem('darkMode', !isDarkMode);
-    };
+    // const handleToggle = () => {
+    //     setIsDarkMode(!isDarkMode);
+    //     localStorage.setItem('darkMode', !isDarkMode);
+    // };
 
     // Apply dark mode styles conditionally
     const pageStyles = isDarkMode
@@ -142,10 +154,7 @@ const HomePage = () => {
                                 Sign Out
                             </button>
                             {/* Switch Component */}
-                            <label className="switch">
-                                <input type="checkbox" checked={isDarkMode} onChange={handleToggle} />
-                                <span className="slider"></span>
-                            </label>
+                            <DarkModeToggle />
                         </div>
                     </div>
                 </nav>
