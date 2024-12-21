@@ -1,17 +1,18 @@
-// src/components/events/EventContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db, auth } from '../../utils/firebase';
 import {
     collection,
-    query,
     getDocs,
     addDoc,
-    updateDoc,
+    deleteDoc,
     doc,
+    updateDoc,
     orderBy,
     Timestamp,
-    where,
-    arrayUnion
+    getDoc,
+    query,
+    arrayUnion,
+    arrayRemove
 } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
@@ -20,30 +21,41 @@ const EventContext = createContext();
 export const EventProvider = ({ children }) => {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [userRole, setUserRole] = useState('user');
+    const [userRole, setUserRole] = useState(null);
 
-    // Fetch user role on mount
+    // Fetch user role on mount and auth state change
     useEffect(() => {
         const checkUserRole = async () => {
             if (auth.currentUser) {
-                const userDoc = await getDocs(query(
-                    collection(db, 'users'),
-                    where('uid', '==', auth.currentUser.uid)
-                ));
-                if (!userDoc.empty) {
-                    setUserRole(userDoc.docs[0].data().role || 'user');
+                try {
+                    const userDocRef = doc(db, 'users', auth.currentUser.uid);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        setUserRole(userData.role || 'user');
+                    } else {
+                        console.log('No user document found');
+                        setUserRole('user');
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                    toast.error('Error fetching user permissions');
+                    setUserRole('user'); // Set default role on error
                 }
+            } else {
+                setUserRole(null);
             }
         };
+
         checkUserRole();
-    }, []);
+    }, [auth.currentUser]);
 
     // Fetch events on mount
     useEffect(() => {
         fetchEvents();
     }, []);
 
-    // Fetch all events from Firestore
     const fetchEvents = async () => {
         try {
             const eventsQuery = query(
@@ -65,20 +77,29 @@ export const EventProvider = ({ children }) => {
         }
     };
 
-    // Add new event (admin only)
     const addEvent = async (eventData) => {
         try {
-            if (userRole !== 'admin') {
+            if (!auth.currentUser) {
+                throw new Error('You must be logged in to add events');
+            }
+
+            const userDocRef = doc(db, 'users', auth.currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (!userDoc.exists() || userDoc.data().role !== 'admin') {
                 throw new Error('Only admins can add events');
             }
+
             const eventRef = await addDoc(collection(db, 'events'), {
                 ...eventData,
                 date: Timestamp.fromDate(new Date(eventData.date)),
                 createdAt: Timestamp.now(),
-                createdBy: auth.currentUser.uid
+                createdBy: auth.currentUser.uid,
+                registrations: []
             });
+
             toast.success('Event added successfully');
-            fetchEvents(); // Refresh events list
+            await fetchEvents();
             return eventRef.id;
         } catch (error) {
             console.error('Error adding event:', error);
@@ -87,19 +108,19 @@ export const EventProvider = ({ children }) => {
         }
     };
 
-    // Register user for an event
     const registerForEvent = async (eventId) => {
         try {
+            if (!auth.currentUser) {
+                throw new Error('You must be logged in to register for events');
+            }
+
             const eventRef = doc(db, 'events', eventId);
-            const registrationData = {
-                userId: auth.currentUser.uid,
-                registeredAt: Timestamp.now()
-            };
             await updateDoc(eventRef, {
-                registrations: arrayUnion(registrationData)
+                registrations: arrayUnion(auth.currentUser.uid)
             });
+
             toast.success('Successfully registered for event');
-            fetchEvents(); // Refresh events list
+            await fetchEvents();
         } catch (error) {
             console.error('Error registering for event:', error);
             toast.error('Failed to register for event');
@@ -107,31 +128,44 @@ export const EventProvider = ({ children }) => {
         }
     };
 
-    // Check if user is registered for an event
     const isRegistered = (event) => {
-        return event.registrations?.some(
-            reg => reg.userId === auth.currentUser?.uid
-        ) || false;
+        return auth.currentUser &&
+            event.registrations &&
+            event.registrations.includes(auth.currentUser.uid);
     };
 
-    // Add event to calendar
+    const deleteEvent = async (eventId) => {
+        try {
+            if (!auth.currentUser) {
+                throw new Error('You must be logged in to delete events');
+            }
+
+            const userDocRef = doc(db, 'users', auth.currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (!userDoc.exists() || userDoc.data().role !== 'admin') {
+                throw new Error('Only admins can delete events');
+            }
+
+            await deleteDoc(doc(db, 'events', eventId));
+            toast.success('Event deleted successfully');
+            await fetchEvents();
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            toast.error(error.message);
+            throw error;
+        }
+    };
+
     const addToCalendar = (event) => {
         try {
-            // Format event for Google Calendar URL
-            const startDate = event.date.toISOString().replace(/-|:|\.\d\d\d/g, '');
-            const endDate = new Date(event.date.getTime() + 2 * 60 * 60 * 1000)
-                .toISOString().replace(/-|:|\.\d\d\d/g, '');
+            const startTime = new Date(event.date);
+            const endTime = new Date(startTime.getTime() + (2 * 60 * 60 * 1000)); // 2 hours duration
 
-            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${
-                encodeURIComponent(event.title)
-            }&details=${
-                encodeURIComponent(event.description)
-            }&location=${
-                encodeURIComponent(event.location || '')
-            }&dates=${startDate}/${endDate}`;
+            const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location || '')}&dates=${startTime.toISOString().replace(/[-:]/g, '').replace(/\.\d+/g, '')}/${endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d+/g, '')}`;
 
-            window.open(url, '_blank');
-            toast.success('Opening calendar...');
+            window.open(googleCalendarUrl, '_blank');
+            toast.success('Opening Google Calendar...');
         } catch (error) {
             console.error('Error adding to calendar:', error);
             toast.error('Failed to add to calendar');
@@ -146,6 +180,7 @@ export const EventProvider = ({ children }) => {
             addEvent,
             registerForEvent,
             isRegistered,
+            deleteEvent,
             addToCalendar,
             refreshEvents: fetchEvents
         }}>

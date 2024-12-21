@@ -1,14 +1,20 @@
-// src/components/events/EventList.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useEvents } from './EventContext';
+import { useAuth } from '../auth/AuthContext';
 import EventCard from './EventCard';
 import AddEvent from './AddEvent';
+import toast from 'react-hot-toast';
 
 const EventList = () => {
-    const { events, loading, userRole } = useEvents();
+    const { events, loading, refreshEvents } = useEvents();
+    const { userRole } = useAuth();
     const [showAddEvent, setShowAddEvent] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        refreshEvents();
+    }, []);
 
     // Filter events based on category and search query
     const filteredEvents = events.filter(event => {
@@ -17,16 +23,6 @@ const EventList = () => {
             event.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
-
-    // Group events by month for better organization
-    const groupedEvents = filteredEvents.reduce((groups, event) => {
-        const month = event.date.toLocaleString('default', { month: 'long', year: 'numeric' });
-        if (!groups[month]) {
-            groups[month] = [];
-        }
-        groups[month].push(event);
-        return groups;
-    }, {});
 
     if (loading) {
         return (
@@ -38,14 +34,17 @@ const EventList = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Header Section */}
+            {/* Header with Add Event Button */}
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-900">Upcoming Events</h1>
                 {userRole === 'admin' && (
                     <button
                         onClick={() => setShowAddEvent(true)}
-                        className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors"
+                        className="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                     >
+                        <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M12 4v16m8-8H4" />
+                        </svg>
                         Add New Event
                     </button>
                 )}
@@ -77,22 +76,20 @@ const EventList = () => {
             </div>
 
             {/* Events Grid */}
-            {Object.entries(groupedEvents).map(([month, monthEvents]) => (
-                <div key={month} className="mb-12">
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-6">{month}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {monthEvents.map(event => (
-                            <EventCard key={event.id} event={event} />
-                        ))}
-                    </div>
-                </div>
-            ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredEvents.map(event => (
+                    <EventCard key={event.id} event={event} />
+                ))}
+            </div>
 
             {/* Add Event Modal */}
             {showAddEvent && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
-                        <AddEvent onClose={() => setShowAddEvent(false)} />
+                        <AddEvent onClose={() => {
+                            setShowAddEvent(false);
+                            refreshEvents();
+                        }} />
                     </div>
                 </div>
             )}

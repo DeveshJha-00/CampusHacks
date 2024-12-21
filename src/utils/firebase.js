@@ -1,7 +1,6 @@
-// src/utils/firebase.js
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -15,3 +14,34 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Helper function to create user document
+// In firebase.js
+export const createUserDocument = async (user, additionalData = {}) => {
+    if (!user) return;
+
+    const userRef = doc(db, 'users', user.uid);
+    const snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+        const { email } = user;
+        const createdAt = new Date();
+
+        try {
+            console.log('Creating user document for:', user.uid); // Debug log
+            await setDoc(userRef, {
+                uid: user.uid,
+                email,
+                role: 'user', // Default role for new users
+                createdAt,
+                ...additionalData
+            });
+            console.log('User document created successfully'); // Debug log
+        } catch (error) {
+            console.error('Error creating user document:', error);
+            throw error; // Rethrow to handle in the component
+        }
+    }
+
+    return userRef;
+};
