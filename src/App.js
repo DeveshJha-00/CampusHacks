@@ -36,9 +36,28 @@ function App() {
               </ProtectedRoute>
             } />
           </Routes>
+
         </AuthProvider>
       </Router>
   );
 }
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

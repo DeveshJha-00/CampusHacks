@@ -16,6 +16,7 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 // Helper function to create user document
+// In firebase.js
 export const createUserDocument = async (user, additionalData = {}) => {
     if (!user) return;
 
@@ -27,6 +28,7 @@ export const createUserDocument = async (user, additionalData = {}) => {
         const createdAt = new Date();
 
         try {
+            console.log('Creating user document for:', user.uid); // Debug log
             await setDoc(userRef, {
                 uid: user.uid,
                 email,
@@ -34,8 +36,10 @@ export const createUserDocument = async (user, additionalData = {}) => {
                 createdAt,
                 ...additionalData
             });
+            console.log('User document created successfully'); // Debug log
         } catch (error) {
             console.error('Error creating user document:', error);
+            throw error; // Rethrow to handle in the component
         }
     }
 

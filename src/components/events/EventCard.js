@@ -1,10 +1,11 @@
-// src/components/events/EventCard.js
 import React from 'react';
 import { format } from 'date-fns';
 import { useEvents } from './EventContext';
+import { useAuth } from '../auth/AuthContext';
 
 const EventCard = ({ event }) => {
-    const { registerForEvent, isRegistered, addToCalendar } = useEvents();
+    const { registerForEvent, isRegistered, addToCalendar, deleteEvent } = useEvents();
+    const { userRole } = useAuth();
 
     const categoryColors = {
         general: 'bg-blue-100 text-blue-800',
@@ -22,20 +23,37 @@ const EventCard = ({ event }) => {
         }
     };
 
+    const handleDelete = async () => {
+        try {
+            await deleteEvent(event.id);
+        } catch (error) {
+            console.error('Delete error:', error);
+        }
+    };
+
     const registered = isRegistered(event);
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
             <div className="p-6">
-                {/* Category Badge */}
-                <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${categoryColors[event.category]}`}>
-          {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
-        </span>
+                <div className="flex justify-between items-start">
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${categoryColors[event.category]}`}>
+                        {event.category.charAt(0).toUpperCase() + event.category.slice(1)}
+                    </span>
+                    {userRole === 'admin' && (
+                        <button
+                            onClick={handleDelete}
+                            className="text-red-600 hover:text-red-800"
+                        >
+                            <svg className="h-5 w-5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                                <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    )}
+                </div>
 
-                {/* Title */}
                 <h3 className="mt-4 text-xl font-semibold text-gray-900">{event.title}</h3>
 
-                {/* Date and Time */}
                 <div className="mt-2 flex items-center text-gray-600">
                     <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -43,7 +61,6 @@ const EventCard = ({ event }) => {
                     <span>{format(event.date, 'MMMM d, yyyy h:mm aa')}</span>
                 </div>
 
-                {/* Location */}
                 {event.location && (
                     <div className="mt-2 flex items-center text-gray-600">
                         <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -54,10 +71,8 @@ const EventCard = ({ event }) => {
                     </div>
                 )}
 
-                {/* Description */}
                 <p className="mt-4 text-gray-600 line-clamp-3">{event.description}</p>
 
-                {/* Action Buttons */}
                 <div className="mt-6 flex flex-col space-y-2">
                     {event.registrationUrl && (
                         <a
@@ -69,18 +84,6 @@ const EventCard = ({ event }) => {
                             Register Now
                         </a>
                     )}
-
-                    <button
-                        onClick={handleRegister}
-                        disabled={registered}
-                        className={`w-full px-4 py-2 text-center rounded-md transition-colors ${
-                            registered
-                                ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
-                                : 'bg-white text-primary-600 border border-primary-600 hover:bg-primary-50'
-                        }`}
-                    >
-                        {registered ? 'Already Registered' : 'Mark as Interested'}
-                    </button>
 
                     <button
                         onClick={() => addToCalendar(event)}
