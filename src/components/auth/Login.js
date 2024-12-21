@@ -14,7 +14,7 @@ const Login = () => {
         e.preventDefault();
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/home');
+            navigate('/');
         } catch (error) {
             setError('Failed to login. Please check your credentials.');
             console.error(error);
