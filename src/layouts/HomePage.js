@@ -95,11 +95,29 @@ import { useAuth } from '../components/auth/AuthContext';
 import { auth } from '../utils/firebase';
 import DarkModeToggle from '../components/DarkModeToggle';
 import { useTheme } from '../contexts/ThemeContext';
+
+import {toast} from 'react-hot-toast';
 import Switch from "../utils/Switch"; // Import the CSS for the Switch
 
 const HomePage = () => {
     const { user } = useAuth();
     const { isDarkMode } = useTheme();
+    useEffect(() => {
+        if (user && !sessionStorage.getItem('welcomeToastShown')) {
+            toast.success(`Welcome back!`, {
+                duration: 3000,
+                position: 'top-center',
+                style: {
+                    background: isDarkMode ? '#2d3748' : '#ffffff',
+                    color: isDarkMode ? '#e2e8f0' : '#4b2d8e',
+                },
+            });
+            sessionStorage.setItem('welcomeToastShown', 'true');
+        }
+    }, [user, isDarkMode]);
+
+
+
 
     // State for managing dark mode
     // const [isDarkMode, setIsDarkMode] = useState(false);
@@ -171,7 +189,7 @@ const HomePage = () => {
                             marginBottom: '24px',
                         }}
                     >
-                        Welcome to CampusConnect
+                        Welcome to CampusConnect!
                     </h1>
                     <p
                         style={{
