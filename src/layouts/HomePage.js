@@ -5,9 +5,10 @@ import { useAuth } from '../components/auth/AuthContext';
 import { auth } from '../utils/firebase';
 import DarkModeToggle from '../components/DarkModeToggle';
 import { useTheme } from '../contexts/ThemeContext';
+import Logo from '../assets/images/logo.png'
 
 import {toast} from 'react-hot-toast';
-import Switch from "../utils/Switch"; // Import the CSS for the Switch
+
 
 const HomePage = () => {
     const { user } = useAuth();
@@ -28,33 +29,15 @@ const HomePage = () => {
 
 
 
-
-    // State for managing dark mode
-    // const [isDarkMode, setIsDarkMode] = useState(false);
-
-    // Use useEffect to load the dark mode state from localStorage (if exists)
-    // useEffect(() => {
-    //     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    //     setIsDarkMode(savedDarkMode);
-    // }, []);
-
-    // Toggle dark mode and save preference in localStorage
-    // const handleToggle = () => {
-    //     setIsDarkMode(!isDarkMode);
-    //     localStorage.setItem('darkMode', !isDarkMode);
-    // };
-
-    // Apply dark mode styles conditionally
     const pageStyles = isDarkMode
         ? {
-            background: '#1a202c', // Dark background color
-            color: '#e2e8f0', // Light text color
+            background: '#1a202c',
+            color: '#e2e8f0',
         }
         : {
-            // background: 'linear-gradient(to bottom, #f3e8ff, #e2d0f9)', // Light background color
-            // color: '#4b2d8e', // Dark text color
-            background: 'linear-gradient(to bottom, #eff6ff, #dbeafe)', // Light blue background (from primary-50 to primary-100)
-            color: '#1e40af', // Primary-800 for text
+
+            background: 'linear-gradient(to bottom, #eff6ff, #dbeafe)',
+            color: '#1e40af',
         };
 
     return (
@@ -63,7 +46,28 @@ const HomePage = () => {
                 {/* Navigation */}
                 <nav className="py-4">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: isDarkMode ? '#e2e8f0' : '#1e40af' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: isDarkMode ? '#e2e8f0' : '#1e40af'
+                        }}>
+                            <img
+                                src={Logo}
+                                alt="CampusConnect Logo"
+                                style={{
+                                    height: '32px',  // Fixed height for consistency
+                                    width: 'auto',   // Width adjusts automatically to maintain aspect ratio
+                                    objectFit: 'contain', // Ensures the image isn't distorted
+                                    verticalAlign: 'middle',
+                                    // Add a subtle transition for dark mode changes
+                                    transition: 'filter 0.3s ease-in-out',
+                                    // Optional: Adjust brightness in dark mode if needed
+                                    filter: isDarkMode ? 'brightness(1.2)' : 'brightness(1)'
+                                }}
+                            />
                             CampusConnect
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -83,13 +87,13 @@ const HomePage = () => {
                             >
                                 Sign Out
                             </button>
-                            {/* Switch Component */}
+
                             <DarkModeToggle />
                         </div>
                     </div>
                 </nav>
 
-                {/* Hero Section */}
+
                 <div style={{ textAlign: 'center', padding: '40px 0' }}>
                     <h1
                         style={{
@@ -120,10 +124,10 @@ const HomePage = () => {
                             to="/events"
                             style={{
                                 position: 'relative',
-                                backgroundColor: isDarkMode ? '#2d3748' : 'white', // Change background for dark mode
+                                backgroundColor: isDarkMode ? '#2d3748' : 'white',
                                 padding: '32px',
                                 borderRadius: '16px',
-                                boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.3)' : '0 4px 16px rgba(0, 0, 0, 0.1)', // Shadow for dark mode
+                                boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.3)' : '0 4px 16px rgba(0, 0, 0, 0.1)',
                                 transition: 'all 0.3s',
                                 textDecoration: 'none',
                                 color: isDarkMode ? '#e2e8f0' : '#1e40af',
@@ -146,7 +150,7 @@ const HomePage = () => {
                             </p>
                         </Link>
 
-                        {/* Lost & Found Card */}
+
                         <Link
                             to="/lost-found"
                             style={{
