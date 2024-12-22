@@ -1,4 +1,4 @@
-// src/layouts/Layout.js
+
 import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useAuth } from '../components/auth/AuthContext';

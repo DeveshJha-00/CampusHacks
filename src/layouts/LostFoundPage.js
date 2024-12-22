@@ -1,4 +1,3 @@
-// src/layouts/LostFoundPage.js
 import React from 'react';
 import { LostFoundProvider } from '../components/lostfound/LostFoundContext';
 import ItemList from '../components/lostfound/ItemList';

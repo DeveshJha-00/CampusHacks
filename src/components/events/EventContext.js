@@ -12,7 +12,7 @@ import {
     getDoc,
     query,
     arrayUnion,
-    arrayRemove
+
 } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 

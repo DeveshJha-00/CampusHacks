@@ -1,4 +1,4 @@
-// src/components/lostfound/ItemCard.js
+
 import React from 'react';
 import { format } from 'date-fns';
 import { useLostFound } from './LostFoundContext';
@@ -43,14 +43,14 @@ const ItemCard = ({ item }) => {
                     {item.title}
                 </h3>
 
-                {/* Type Badge */}
+
                 <span className={`inline-block mt-2 px-2 py-1 text-sm rounded ${
                     item.type === 'lost' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
                 }`}>
           {item.type === 'lost' ? 'Lost Item' : 'Found Item'}
         </span>
 
-                {/* Date and Location */}
+
                 <div className={`mt-4 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     <p>
                         <span className="font-medium">Date:</span>{' '}
@@ -62,12 +62,12 @@ const ItemCard = ({ item }) => {
                     </p>
                 </div>
 
-                {/* Description */}
+
                 <p className={`mt-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {item.description}
                 </p>
 
-                {/* Contact Information */}
+
                 <div className={`mt-6 pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                     <p className="text-sm text-gray-600">
                         <span className="font-medium">Contact:</span>{' '}
@@ -75,7 +75,7 @@ const ItemCard = ({ item }) => {
                     </p>
                 </div>
 
-                {/* Actions */}
+
                 {(user?.email === item.userEmail || user?.role === 'admin') && (
                     <div className="mt-4 flex space-x-2">
                         {item.status === 'open' && (

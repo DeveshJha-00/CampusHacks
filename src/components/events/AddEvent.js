@@ -80,7 +80,7 @@ const AddEvent = ({ onClose }) => {
                         />
                     </div>
 
-                    {/* Description */}
+
                     <div>
                         <label
                             className={`${
@@ -107,7 +107,7 @@ const AddEvent = ({ onClose }) => {
                         />
                     </div>
 
-                    {/* Date and Time */}
+
                     <div>
                         <label
                             className={`${
@@ -160,7 +160,7 @@ const AddEvent = ({ onClose }) => {
                         />
                     </div>
 
-                    {/* Registration URL */}
+
                     <div>
                         <label
                             className={`${
@@ -186,7 +186,7 @@ const AddEvent = ({ onClose }) => {
                         />
                     </div>
 
-                    {/* Category */}
+
                     <div>
                         <label
                             className={`${
@@ -217,7 +217,7 @@ const AddEvent = ({ onClose }) => {
                         </select>
                     </div>
 
-                    {/* Action Buttons */}
+
                     <div className="flex justify-end space-x-4">
                         <button
                             type="button"
