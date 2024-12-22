@@ -3,11 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/auth/AuthContext';
 import { Toaster } from 'react-hot-toast';
 
-// Import pages
 import HomePage from './layouts/HomePage';
 import EventPage from './layouts/EventPage';
 import Login from './components/auth/Login';
-
 import LostFoundPage from './layouts/LostFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
