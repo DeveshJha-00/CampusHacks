@@ -520,23 +520,42 @@ const ItemCard = ({ item }) => {
                 <div className="mt-4 space-y-4">
                     <h4 className="font-medium">Pending Answers</h4>
                     {item.answers?.filter(ans => !ans.approved && !ans.rejected).map((answer) => (
-                        <div key={answer.id} className="bg-gray-50 p-3 rounded-md space-y-2">
-                            <p className="text-sm">{answer.answer}</p>
-                            <div className="flex space-x-2">
-                                <button
-                                    onClick={() => handleApproveAnswer(answer.id, true)}
-                                    className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700"
-                                >
-                                    Approve
-                                </button>
-                                <button
-                                    onClick={() => handleApproveAnswer(answer.id, false)}
-                                    className="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700"
-                                >
-                                    Reject
-                                </button>
-                            </div>
-                        </div>
+                        <div 
+    key={answer.id} 
+    className={`${
+        isDarkMode 
+            ? 'bg-gray-700' 
+            : 'bg-gray-50'
+    } p-3 rounded-md space-y-2`}
+>
+    <p className={`text-sm ${
+        isDarkMode ? 'text-gray-200' : 'text-gray-700'
+    }`}>
+        {answer.answer}
+    </p>
+    <div className="flex space-x-2">
+        <button
+            onClick={() => handleApproveAnswer(answer.id, true)}
+            className={`px-3 py-1 text-sm text-white rounded-md ${
+                isDarkMode 
+                    ? 'bg-green-700 hover:bg-green-800' 
+                    : 'bg-green-600 hover:bg-green-700'
+            }`}
+        >
+            Approve
+        </button>
+        <button
+            onClick={() => handleApproveAnswer(answer.id, false)}
+            className={`px-3 py-1 text-sm text-white rounded-md ${
+                isDarkMode 
+                    ? 'bg-red-700 hover:bg-red-800' 
+                    : 'bg-red-600 hover:bg-red-700'
+            }`}
+        >
+            Reject
+        </button>
+    </div>
+</div>
                     ))}
                 </div>
             );
