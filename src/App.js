@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/auth/AuthContext';
@@ -12,52 +11,6 @@ import Register from './components/auth/Register';
 import LostFoundPage from './layouts/LostFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
-
-// function App() {
-//   return (
-//       <Router>
-//         <AuthProvider>
-//           <Toaster position="top-right" />
-//           <Routes>
-//             <Route path="/login" element={<Login />} />
-//             <Route path="/register" element={<Register />} />
-//             <Route path="/" element={
-//               <ProtectedRoute>
-//                 <HomePage />
-//               </ProtectedRoute>
-//             } />
-//             <Route path="/events" element={
-//               <ProtectedRoute>
-//                 <EventPage />
-//               </ProtectedRoute>
-//             } />
-//             <Route path="/lost-found" element={
-//               <ProtectedRoute>
-//                 <LostFoundPage />
-//               </ProtectedRoute>
-//             } />
-//           </Routes>
-//
-//         </AuthProvider>
-//       </Router>
-//   );
-// }
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// src/App.js
 import { ThemeProvider } from './contexts/ThemeContext';
 
 function App() {
@@ -69,7 +22,7 @@ function App() {
             <Routes>
               {/* Your existing routes */}
               <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              {/* <Route path="/register" element={<Register />} /> */}
               <Route path="/" element={
                 <ProtectedRoute>
                   <HomePage />

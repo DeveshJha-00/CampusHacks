@@ -123,21 +123,23 @@ const HomePage = () => {
             color: '#e2e8f0', // Light text color
         }
         : {
-            background: 'linear-gradient(to bottom, #f3e8ff, #e2d0f9)', // Light background color
-            color: '#4b2d8e', // Dark text color
+            // background: 'linear-gradient(to bottom, #f3e8ff, #e2d0f9)', // Light background color
+            // color: '#4b2d8e', // Dark text color
+            background: 'linear-gradient(to bottom, #eff6ff, #dbeafe)', // Light blue background (from primary-50 to primary-100)
+            color: '#1e40af', // Primary-800 for text
         };
 
     return (
-        <div style={{ minHeight: '100vh', ...pageStyles }}>
+        <div style={{ minHeight: '100vh', ...pageStyles, transition: 'all 0.3s ease' }}>
             <div className="container" style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
                 {/* Navigation */}
                 <nav className="py-4">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: isDarkMode ? '#e2e8f0' : '#4b2d8e' }}>
+                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: isDarkMode ? '#e2e8f0' : '#1e40af' }}>
                             CampusConnect
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ color: isDarkMode ? '#e2e8f0' : '#5c5c5c', marginRight: '30px', }}>{user?.email}</span>
+                            <span style={{ color: isDarkMode ? '#e2e8f0' : '#1e40af', marginRight: '30px', }}>{user?.email}</span>
                             <button
                                 onClick={() => auth.signOut()}
                                 style={{
@@ -146,7 +148,7 @@ const HomePage = () => {
                                     fontWeight: '500',
                                     color: isDarkMode ? '#e2e8f0' : '#4b2d8e',
                                     cursor: 'pointer',
-                                    border: `1px solid ${isDarkMode ? '#e2e8f0' : '#4b2d8e'}`,
+                                    border: `1px solid ${isDarkMode ? '#e2e8f0' : '#1e40af'}`,
                                     borderRadius: '4px',
                                     marginRight: '30px',
                                 }}
@@ -165,7 +167,7 @@ const HomePage = () => {
                         style={{
                             fontSize: '48px',
                             fontWeight: '800',
-                            color: isDarkMode ? '#e2e8f0' : '#4b2d8e',
+                            color: isDarkMode ? '#e2e8f0' : '#1e40af',
                             marginBottom: '24px',
                         }}
                     >
@@ -174,7 +176,7 @@ const HomePage = () => {
                     <p
                         style={{
                             fontSize: '20px',
-                            color: isDarkMode ? '#e2e8f0' : '#5c5c5c',
+                            color: isDarkMode ? '#e2e8f0' : '#3b82f6',
                             marginBottom: '48px',
                             maxWidth: '800px',
                             margin: '0 auto',
@@ -196,10 +198,10 @@ const HomePage = () => {
                                 boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.3)' : '0 4px 16px rgba(0, 0, 0, 0.1)', // Shadow for dark mode
                                 transition: 'all 0.3s',
                                 textDecoration: 'none',
-                                color: isDarkMode ? '#e2e8f0' : '#4b2d8e',
+                                color: isDarkMode ? '#e2e8f0' : '#1e40af',
                             }}
                         >
-                            <div style={{ color: '#7c4dff', marginBottom: '16px', }}>
+                            <div style={{ color: '#3b82f6', marginBottom: '16px', }}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -211,7 +213,7 @@ const HomePage = () => {
                                 </svg>
                             </div>
                             <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px', }}>Event Reminders</h2>
-                            <p style={{ color: isDarkMode ? '#e2e8f0' : '#5c5c5c' }}>
+                            <p style={{ color: isDarkMode ? '#e2e8f0' : '#3b82f6' }}>
                                 Stay updated with upcoming events and never miss an important date.
                             </p>
                         </Link>
@@ -227,10 +229,10 @@ const HomePage = () => {
                                 boxShadow: isDarkMode ? '0 4px 16px rgba(0, 0, 0, 0.3)' : '0 4px 16px rgba(0, 0, 0, 0.1)', // Shadow for dark mode
                                 transition: 'all 0.3s',
                                 textDecoration: 'none',
-                                color: isDarkMode ? '#e2e8f0' : '#4b2d8e',
+                                color: isDarkMode ? '#e2e8f0' : '#1e40af',
                             }}
                         >
-                            <div style={{ color: '#7c4dff', marginBottom: '16px' }}>
+                            <div style={{ color: '#3b82f6', marginBottom: '16px' }}>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -242,7 +244,7 @@ const HomePage = () => {
                                 </svg>
                             </div>
                             <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '8px' }}>Lost & Found</h2>
-                            <p style={{ color: isDarkMode ? '#e2e8f0' : '#5c5c5c' }}>
+                            <p style={{ color: isDarkMode ? '#e2e8f0' : '#3b82f6' }}>
                                 Help the community by posting or searching for lost items.
                             </p>
                         </Link>
