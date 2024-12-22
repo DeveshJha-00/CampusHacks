@@ -5,7 +5,7 @@ import { useAuth } from '../components/auth/AuthContext';
 import { auth } from '../utils/firebase';
 import DarkModeToggle from '../components/DarkModeToggle';
 import { useTheme } from '../contexts/ThemeContext';
-
+import Logo from '../assets/images/logo.png'
 import {toast} from 'react-hot-toast';
 import Switch from "../utils/Switch"; // Import the CSS for the Switch
 
@@ -26,24 +26,6 @@ const HomePage = () => {
         }
     }, [user, isDarkMode]);
 
-
-
-
-    // State for managing dark mode
-    // const [isDarkMode, setIsDarkMode] = useState(false);
-
-    // Use useEffect to load the dark mode state from localStorage (if exists)
-    // useEffect(() => {
-    //     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    //     setIsDarkMode(savedDarkMode);
-    // }, []);
-
-    // Toggle dark mode and save preference in localStorage
-    // const handleToggle = () => {
-    //     setIsDarkMode(!isDarkMode);
-    //     localStorage.setItem('darkMode', !isDarkMode);
-    // };
-
     // Apply dark mode styles conditionally
     const pageStyles = isDarkMode
         ? {
@@ -63,7 +45,28 @@ const HomePage = () => {
                 {/* Navigation */}
                 <nav className="py-4">
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div style={{ fontSize: '24px', fontWeight: 'bold', color: isDarkMode ? '#e2e8f0' : '#1e40af' }}>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: isDarkMode ? '#e2e8f0' : '#1e40af'
+                        }}>
+                            <img
+                                src={Logo}
+                                alt="CampusConnect Logo"
+                                style={{
+                                    height: '32px',  // Fixed height for consistency
+                                    width: 'auto',   // Width adjusts automatically to maintain aspect ratio
+                                    objectFit: 'contain', // Ensures the image isn't distorted
+                                    verticalAlign: 'middle',
+                                    // Add a subtle transition for dark mode changes
+                                    transition: 'filter 0.3s ease-in-out',
+                                    // Optional: Adjust brightness in dark mode if needed
+                                    filter: isDarkMode ? 'brightness(1.2)' : 'brightness(1)'
+                                }}
+                            />
                             CampusConnect
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
