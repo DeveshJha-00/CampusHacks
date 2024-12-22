@@ -2,6 +2,9 @@
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+⚠️ Important Note:
+The application and all files are located on the master branch, not the main branch.
+
 # CampusConnect Project
 
 ## Description
