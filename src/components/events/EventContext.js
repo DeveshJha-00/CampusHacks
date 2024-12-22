@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Copyright (c) 2024 Manjunath Patil, Devesh Jha, Ninad Hebbar, Ramya Cherukupalli
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db, auth } from '../../utils/firebase';
 import {
@@ -16,7 +23,10 @@ import {
 } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 
+
 const EventContext = createContext();
+
+
 
 export const EventProvider = ({ children }) => {
     const [events, setEvents] = useState([]);
