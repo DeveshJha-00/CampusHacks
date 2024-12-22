@@ -7,7 +7,7 @@ import { Toaster } from 'react-hot-toast';
 import HomePage from './layouts/HomePage';
 import EventPage from './layouts/EventPage';
 import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+// import Register from './components/auth/Register';
 import LostFoundPage from './layouts/LostFoundPage';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
