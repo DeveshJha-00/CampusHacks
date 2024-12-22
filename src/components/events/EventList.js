@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { useEvents } from './EventContext';
 import { useAuth } from '../auth/AuthContext';
 import EventCard from './EventCard';
 import AddEvent from './AddEvent';
-import toast from 'react-hot-toast';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const EventList = () => {

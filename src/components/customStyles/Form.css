@@ -376,6 +376,21 @@
 }
 
 
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+    height: 16px;
+    visibility: hidden;
+}
+
+.error-message.show {
+    visibility: visible;
+}
+
+
 .toggle-checkbox:checked + .toggle-switch {
     background-color: #31cbc1;
 }
