@@ -1,11 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { useEvents } from './EventContext';
 import { useAuth } from '../auth/AuthContext';
 import EventCard from './EventCard';
 import AddEvent from './AddEvent';
-import toast from 'react-hot-toast';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const EventList = () => {
+    const { isDarkMode } = useTheme();
     const { events, loading, refreshEvents } = useEvents();
     const { userRole } = useAuth();
     const [showAddEvent, setShowAddEvent] = useState(false);
@@ -16,13 +18,22 @@ const EventList = () => {
         refreshEvents();
     }, []);
 
-    // Filter events based on category and search query
     const filteredEvents = events.filter(event => {
         const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory;
         const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             event.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
+
+    const inputStyles = isDarkMode ? {
+        backgroundColor: '#374151',
+        color: '#e2e8f0',
+        borderColor: '#4b5563'
+    } : {
+        backgroundColor: '#ffffff',
+        color: '#000000',
+        borderColor: '#e5e7eb'
+    };
 
     if (loading) {
         return (
@@ -34,9 +45,10 @@ const EventList = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Header with Add Event Button */}
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">Upcoming Events</h1>
+                <h1 className={`text-2xl font-bold mb-6 ${
+                    isDarkMode ? 'text-gray-100' : 'text-gray-900'
+                }`}>Upcoming Events</h1>
                 {userRole === 'admin' && (
                     <button
                         onClick={() => setShowAddEvent(true)}
@@ -50,19 +62,22 @@ const EventList = () => {
                 )}
             </div>
 
-            {/* Filters Section */}
             <div className="mb-8 flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                     <input
                         type="text"
                         placeholder="Search events..."
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+                            isDarkMode ? 'placeholder-gray-400' : 'placeholder-gray-500'
+                        }`}
+                        style={inputStyles}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
                 <select
-                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    style={inputStyles}
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                 >
@@ -75,17 +90,17 @@ const EventList = () => {
                 </select>
             </div>
 
-            {/* Events Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredEvents.map(event => (
                     <EventCard key={event.id} event={event} />
                 ))}
             </div>
 
-            {/* Add Event Modal */}
             {showAddEvent && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+                    <div className={`rounded-lg p-6 max-w-2xl w-full mx-4 ${
+                        isDarkMode ? 'bg-gray-800' : 'bg-white'
+                    }`}>
                         <AddEvent onClose={() => {
                             setShowAddEvent(false);
                             refreshEvents();
@@ -94,11 +109,14 @@ const EventList = () => {
                 </div>
             )}
 
-            {/* Empty State */}
             {filteredEvents.length === 0 && (
                 <div className="text-center py-12">
-                    <h3 className="text-xl text-gray-600">No events found</h3>
-                    <p className="text-gray-500 mt-2">Try adjusting your filters or search query</p>
+                    <h3 className={`text-xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                        No events found
+                    </h3>
+                    <p className={`mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        Try adjusting your filters or search query
+                    </p>
                 </div>
             )}
         </div>

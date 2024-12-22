@@ -1,54 +1,66 @@
-// src/layouts/LostFoundPage.js
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../utils/firebase';
-import AddLostFoundItem from '../components/lostfound/AddLostFoundItem';
+import React from 'react';
+import { LostFoundProvider } from '../components/lostfound/LostFoundContext';
+import ItemList from '../components/lostfound/ItemList';
+import { useAuth } from '../components/auth/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { Navigate } from 'react-router-dom';
+import DarkModeToggle from '../components/DarkModeToggle';
 
 const LostFoundPage = () => {
-    const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { user, loading } = useAuth();
+    const { isDarkMode } = useTheme();
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            try {
-                const itemsCollection = collection(db, 'lostFoundItems');
-                const itemsSnapshot = await getDocs(itemsCollection);
-                const itemsList = itemsSnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
-                setItems(itemsList);
-            } catch (error) {
-                console.error('Error fetching items:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500" />
+            </div>
+        );
+    }
 
-        fetchItems();
-    }, []);
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
 
     return (
-        <div className="max-w-4xl mx-auto p-6 space-y-8">
-            <h1 className="text-3xl font-bold text-center text-gray-800">Lost & Found</h1>
-
-            <AddLostFoundItem />
-
-            {loading ? (
-                <p className="text-center text-lg text-gray-500">Loading items...</p>
-            ) : items.length === 0 ? (
-                <p className="text-center text-lg text-gray-500">No items have been reported yet.</p>
-            ) : (
-                <ul className="space-y-4">
-                    {items.map((item) => (
-                        <li key={item.id} className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-300">
-                            <h2 className="text-xl font-semibold text-gray-800">{item.title}</h2>
-                            <p className="text-gray-600">{item.description}</p>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+        <LostFoundProvider>
+            <div style={{
+                minHeight: '100vh',
+                background: isDarkMode ? '#1a202c' : '#f3f4f6',
+                color: isDarkMode ? '#e2e8f0' : '#4b2d8e'
+            }}>
+                <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '20px' }}>
+                    <nav style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '1rem 0'
+                    }}>
+                        <h1 style={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            color: isDarkMode ? '#e2e8f0' : '#4b2d8e'
+                        }}>
+                            Lost & Found
+                        </h1>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                            <span style={{ color: isDarkMode ? '#e2e8f0' : '#5c5c5c' }}>
+                                {user?.email}
+                            </span>
+                            <DarkModeToggle />
+                        </div>
+                    </nav>
+                    <div style={{
+                        padding: '20px',
+                        background: isDarkMode ? '#2d3748' : 'white',
+                        borderRadius: '8px',
+                        boxShadow: isDarkMode ? '0 4px 6px rgba(0, 0, 0, 0.3)' : '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }}>
+                        <ItemList />
+                    </div>
+                </div>
+            </div>
+        </LostFoundProvider>
     );
 };
 

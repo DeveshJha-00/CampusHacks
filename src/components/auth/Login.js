@@ -1,62 +1,135 @@
-// src/components/auth/Login.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth } from '../../utils/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../components/auth/AuthContext';
+import "../customStyles/Form.css";
 
-const Login = () => {
+const Form = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [loginAttempted, setLoginAttempted] = useState(false);
     const navigate = useNavigate();
+    const { user } = useAuth();
+
+    // Monitor auth state changes
+    useEffect(() => {
+        if (loginAttempted && user) {
+            console.log('User authenticated, navigating to homepage...');
+            navigate('/', { replace: true });
+        }
+    }, [user, loginAttempted, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isLoading) {
+            console.log('Login already in progress');
+            return;
+        }
+
+        setError('');
+        setIsLoading(true);
+        setLoginAttempted(true);
+
         try {
+            // Add a pre-check for network connectivity
+            const testConnection = await fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys', {
+                method: 'GET',
+                mode: 'cors',
+            });
+
+            if (!testConnection.ok) {
+                throw new Error('Network connectivity issue');
+            }
+
+            console.log('Attempting Firebase authentication...');
             await signInWithEmailAndPassword(auth, email, password);
-            navigate('/');
+
         } catch (error) {
-            setError('Failed to login. Please check your credentials.');
-            console.error(error);
+            console.error('Login error:', error);
+
+            let errorMessage = 'Failed to login. Please check your credentials.';
+
+            if (error.code === 'auth/network-request-failed' || error.message === 'Network connectivity issue') {
+                errorMessage = 'Network error. Please check your internet connection and try again.';
+            } else if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No account found with this email address.';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password. Please try again.';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = 'Too many failed attempts. Please try again later.';
+            }
+
+            setError(errorMessage);
+            setLoginAttempted(false);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <div className="max-w-md w-full space-y-8">
-                <h2 className="text-center text-3xl font-extrabold text-gray-900">
-                    Sign in to your account
-                </h2>
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email address"
-                            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        />
-                    </div>
-                    <div>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Password"
-                            className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                        Sign in
-                    </button>
-                </form>
-            </div>
+        <div className='bg'>
+            <form className="form" onSubmit={handleSubmit}>
+                <div className="title-2">
+                    <span>SIGN IN</span>
+                </div>
+
+                <div className="input-container">
+                    <input
+                        placeholder="Email"
+                        type="email"
+                        className="input-mail"
+                        required
+                        value={email}
+                        autoComplete="email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        disabled={isLoading}
+                    />
+                </div>
+
+                <section className="bg-stars">
+                    <span className="star"></span>
+                    <span className="star"></span>
+                    <span className="star"></span>
+                    <span className="star"></span>
+                </section>
+
+                <div className="input-container">
+                    <input
+                        placeholder="Password"
+                        type="password"
+                        className="input-pwd"
+                        required
+                        minLength={5}
+                        maxLength={15}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        disabled={isLoading}
+                    />
+                </div>
+
+                {error && (
+                    <p className="error-message show" style={{ color: '#ff4444', marginBottom: '10px' }}>
+                        {error}
+                    </p>
+                )}
+
+                <button
+                    className="submit"
+                    type="submit"
+                    disabled={isLoading}
+                    style={{ opacity: isLoading ? 0.7 : 1 }}
+                >
+                    <span className="sign-text">
+                        {isLoading ? 'Signing In...' : 'Sign In'}
+                    </span>
+                </button>
+            </form>
         </div>
     );
 };
 
-export default Login;
+export default Form;

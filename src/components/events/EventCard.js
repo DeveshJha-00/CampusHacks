@@ -2,8 +2,10 @@ import React from 'react';
 import { format } from 'date-fns';
 import { useEvents } from './EventContext';
 import { useAuth } from '../auth/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const EventCard = ({ event }) => {
+    const { isDarkMode } = useTheme();
     const { registerForEvent, isRegistered, addToCalendar, deleteEvent } = useEvents();
     const { userRole } = useAuth();
 
@@ -34,7 +36,8 @@ const EventCard = ({ event }) => {
     const registered = isRegistered(event);
 
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} 
+        rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300`}>
             <div className="p-6">
                 <div className="flex justify-between items-start">
                     <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${categoryColors[event.category]}`}>
@@ -52,9 +55,9 @@ const EventCard = ({ event }) => {
                     )}
                 </div>
 
-                <h3 className="mt-4 text-xl font-semibold text-gray-900">{event.title}</h3>
+                <h3 className={`mt-4 text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{event.title}</h3>
 
-                <div className="mt-2 flex items-center text-gray-600">
+                <div className={`mt-2 flex items-center ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     <svg className="h-5 w-5 mr-2" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
                         <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
@@ -71,7 +74,7 @@ const EventCard = ({ event }) => {
                     </div>
                 )}
 
-                <p className="mt-4 text-gray-600 line-clamp-3">{event.description}</p>
+                <p className={`mt-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'} line-clamp-3`}>{event.description}</p>
 
                 <div className="mt-6 flex flex-col space-y-2">
                     {event.registrationUrl && (
