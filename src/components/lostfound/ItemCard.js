@@ -2,9 +2,11 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { useLostFound } from './LostFoundContext';
+import { useTheme } from '../../contexts/ThemeContext';
 import { useAuth } from '../auth/AuthContext';
 
 const ItemCard = ({ item }) => {
+    const { isDarkMode } = useTheme();
     const { updateItemStatus } = useLostFound();
     const { user } = useAuth();
 
@@ -23,7 +25,8 @@ const ItemCard = ({ item }) => {
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <div className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} 
+            rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300`}>
             <div className="p-6">
                 {/* Status Badge */}
                 <div className="flex justify-between items-start mb-4">
@@ -36,7 +39,9 @@ const ItemCard = ({ item }) => {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-semibold text-gray-900">{item.title}</h3>
+                <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {item.title}
+                </h3>
 
                 {/* Type Badge */}
                 <span className={`inline-block mt-2 px-2 py-1 text-sm rounded ${
@@ -46,7 +51,7 @@ const ItemCard = ({ item }) => {
         </span>
 
                 {/* Date and Location */}
-                <div className="mt-4 text-sm text-gray-600">
+                <div className={`mt-4 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     <p>
                         <span className="font-medium">Date:</span>{' '}
                         {format(item.createdAt, 'MMM d, yyyy')}
@@ -58,12 +63,12 @@ const ItemCard = ({ item }) => {
                 </div>
 
                 {/* Description */}
-                <p className="mt-4 text-gray-600">
+                <p className={`mt-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                     {item.description}
                 </p>
 
                 {/* Contact Information */}
-                <div className="mt-6 pt-4 border-t border-gray-200">
+                <div className={`mt-6 pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                     <p className="text-sm text-gray-600">
                         <span className="font-medium">Contact:</span>{' '}
                         {item.userEmail}
